@@ -1,0 +1,1712 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1" name="viewport" />
+  <title>المعاملات</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <style>
+    body{
+      font-family: Arial, sans-serif;
+      background-color: #ef1a1a;
+    }
+    button:focus {
+      outline: none;
+    }
+    
+  </style>
+</head>
+<body class="p-4 bg-gray-100">
+  <!-- Header -->
+  <div class="flex justify-between mb-6 px-2">
+    <div class="font-bold underline text-base" id="dateTime">
+      4/5/2025 8:19
+    </div>
+    <div class="font-bold underline text-base">مركز الفارس للعناية بالرجل</div>
+  </div>
+
+  <!-- Dashboard Buttons -->
+  <div class="grid grid-cols-2 sm:grid-cols-5 gap-4 max-w-6xl mx-auto" id="dashboard">
+    <button class="bg-white p-4 shadow-sm border border-gray-300 flex flex-col items-center" onclick="showSection('stock')" aria-label="المخزون">
+      <div class="bg-gray-300 text-center py-2 font-semibold mb-4 w-full">المخزون</div>
+      <img src="https://storage.googleapis.com/a1aa/image/a8c5cd73-7096-445b-085b-3dd82a355100.jpg" width="100" height="80" alt="المخزون" />
+    </button>
+    <button class="bg-white p-4 shadow-sm border border-gray-300 flex flex-col items-center" onclick="showSection('revenue')" aria-label="الإيرادات">
+      <div class="bg-gray-300 text-center py-2 font-semibold mb-4 w-full">الإيرادات</div>
+      <img src="https://storage.googleapis.com/a1aa/image/75061f22-1ee6-40c8-d54e-6b206a8a68bc.jpg" width="100" height="80" alt="الإيرادات" />
+    </button>
+    <button class="bg-white p-4 shadow-sm border border-gray-300 flex flex-col items-center" onclick="showSection('expenses')" aria-label="المصروفات">
+      <div class="bg-gray-300 text-center py-2 font-semibold mb-4 w-full">المصروفات</div>
+      <img src="https://storage.googleapis.com/a1aa/image/166912ed-14e3-4eb2-c02d-ce854da94386.jpg" width="100" height="80" alt="المصروفات" />
+    </button>
+    <button class="bg-white p-4 shadow-sm border border-gray-300 flex flex-col items-center" onclick="showSection('suppliers')" aria-label="الموردين">
+      <div class="bg-gray-300 text-center py-2 font-semibold mb-4 w-full">الموردين</div>
+      <img src="https://storage.googleapis.com/a1aa/image/aba29aea-30c9-4f31-47e0-a82585f41578.jpg" width="100" height="80" alt="الموردين" />
+    </button>
+    <button class="bg-white p-4 shadow-sm border border-gray-300 flex flex-col items-center" onclick="showSection('clients')" aria-label="العملاء">
+      <div class="bg-gray-300 text-center py-2 font-semibold mb-4 w-full">العملاء</div>
+      <img src="https://storage.googleapis.com/a1aa/image/2e2b487e-1898-48dc-8fe5-f82d9b14d33c.jpg" width="100" height="80" alt="العملاء" />
+    </button>
+    <button class="bg-white p-4 shadow-sm border border-gray-300 flex flex-col items-center" onclick="showSection('daily-entry')" aria-label="الادخال اليومي">
+      <div class="bg-gray-300 text-center py-2 font-semibold mb-4 w-full">الادخال اليومي</div>
+      <img src="https://storage.googleapis.com/a1aa/image/e447f414-1e23-47d1-aa32-db5d382ecbbb.jpg" width="100" height="80" alt="الادخال اليومي" />
+    </button>
+    <button class="bg-white p-4 shadow-sm border border-gray-300 flex flex-col items-center" onclick="showSection('other-accounts')" aria-label="الحسابات الاخرى">
+      <div class="bg-gray-300 text-center py-2 font-semibold mb-4 w-full">الحسابات الاخرى</div>
+      <img src="https://storage.googleapis.com/a1aa/image/ecb99c87-f4e2-46e1-7a6f-1196f1666d39.jpg" width="100" height="80" alt="الحسابات الاخرى" />
+    </button>
+    <button class="bg-white p-4 shadow-sm border border-gray-300 flex flex-col items-center" onclick="showSection('cash-movement')" aria-label="الدخل">
+      <div class="bg-gray-300 text-center py-2 font-semibold mb-4 w-full">الدخل</div>
+      <img src="https://storage.googleapis.com/a1aa/image/ecb99c87-f4e2-46e1-7a6f-1196f1666d39.jpg" width="100" height="80" alt="الدخل" />
+    </button>
+    <button class="bg-white p-4 shadow-sm border border-gray-300 flex flex-col items-center" onclick="showSection('item-movement')" aria-label="الكاش">
+      <div class="bg-gray-300 text-center py-2 font-semibold mb-4 w-full">الكاش</div>
+      <img src="https://storage.googleapis.com/a1aa/image/b74ceede-bc05-4ec2-33b7-c16bfb8a0d72.jpg" width="100" height="80" alt="الكاش" />
+    </button>
+    <button class="bg-white p-4 shadow-sm border border-gray-300 flex flex-col items-center" onclick="showSection('account-statement')" aria-label="حسابات العمال">
+      <div class="bg-gray-300 text-center py-2 font-semibold mb-4 w-full">حسابات العمال</div>
+      <img src="https://storage.googleapis.com/a1aa/image/db5f95a8-9db5-4d4a-7096-8f9575d31490.jpg" width="100" height="80" alt="حسابات العمال" />
+    </button>
+  </div>
+
+  <!-- Sections (Pages) -->
+  <div id="sections" class="mt-8 max-w-6xl mx-auto space-y-4">
+    <div id="stock" class="hidden bg-white p-4 rounded shadow"><h2 class="text-xl font-bold mb-2">
+         
+   
+        <div class="max-w-5xl mx-auto bg-white shadow p-6 rounded">
+            <h1 class="text-2xl font-bold mb-6 text-center">صفحة المخزون</h1>
+        
+            <!-- نموذج إضافة صنف جديد -->
+            <form id="stock-form" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+              <input type="text" id="item-name" placeholder="اسم الصنف" class="p-2 border rounded" required />
+              <input type="number" id="item-quantity" placeholder="الكمية" class="p-2 border rounded" required min="0" step="1" />
+              <input type="text" id="item-unit" placeholder="الوحدة" class="p-2 border rounded" required />
+              <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded col-span-1 md:col-span-4">
+                إضافة الصنف
+              </button>
+            </form>
+        
+            <div class="mb-4 text-left">
+              <button id="export-btn" class="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded">
+                تصدير إلى Excel
+              </button>
+            </div>
+        
+            <!-- جدول عرض المخزون -->
+            <table class="w-full border text-center" id="stock-table">
+              <thead class="bg-gray-200">
+                <tr>
+                  <th class="p-2 border">الرقم</th>
+                  <th class="p-2 border">اسم الصنف</th>
+                  <th class="p-2 border">الكمية</th>
+                  <th class="p-2 border">الوحدة</th>
+                  <th class="p-2 border">الإجراءات</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- الأصناف ستضاف هنا ديناميكياً -->
+              </tbody>
+            </table>
+            <div class="text-center mt-6">
+              <a href="a7med.html" class="text-blue-600 underline">العودة للوحة التحكم</a>
+            </div>
+        </div>
+    </div>
+    <div id="revenue" class="hidden bg-white p-4 rounded shadow"><h2 class="text-xl font-bold mb-2">
+        <div class="max-w-5xl mx-auto bg-white shadow p-6 rounded">
+            <h1 class="text-2xl font-bold mb-6 text-center">صفحة الإيرادات</h1>
+        
+            <!-- نموذج إضافة إيراد جديد -->
+            <form id="revenue-form" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+              <input type="text" id="revenue-source" placeholder="مصدر الإيراد" class="p-2 border rounded" required />
+              <input type="number" id="revenue-amount" placeholder="المبلغ" class="p-2 border rounded" required min="0" step="0.01" />
+              <input type="date" id="revenue-date" class="p-2 border rounded" required />
+              <button type="submit" class="bg-green-600 text-white py-2 px-4 rounded col-span-1 md:col-span-4">
+                إضافة الإيراد
+              </button>
+            </form>
+        
+            <div class="mb-4 text-left">
+              <button id="export-btn" class="bg-green-700 hover:bg-green-800 text-white py-2 px-4 rounded">
+                تصدير إلى Excel
+              </button>
+            </div>
+        
+            <!-- جدول عرض الإيرادات -->
+            <table class="w-full border text-center" id="revenue-table">
+              <thead class="bg-gray-200">
+                <tr>
+                  <th class="p-2 border">الرقم</th>
+                  <th class="p-2 border">المصدر</th>
+                  <th class="p-2 border">المبلغ</th>
+                  <th class="p-2 border">التاريخ</th>
+                  <th class="p-2 border">الإجراءات</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- الإيرادات ستضاف هنا ديناميكياً -->
+              </tbody>
+            </table>
+            <div class="text-center mt-6">
+              <a href="a7med.html" class="text-blue-600 underline">العودة للوحة التحكم</a>
+            </div>
+          </div>
+    </div>
+    <div id="expenses" class="hidden bg-white p-4 rounded shadow"><h2 class="text-xl font-bold mb-2">
+        <div class="max-w-5xl mx-auto bg-white shadow p-6 rounded">
+            <h1 class="text-2xl font-bold mb-6 text-center">صفحة المصروفات</h1>
+        
+            <!-- نموذج إضافة مصروف جديد -->
+            <form id="expenses-form" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+              <input type="text" id="expense-type" placeholder="نوع المصروف" class="p-2 border rounded" required />
+              <input type="number" id="expense-amount" placeholder="المبلغ" class="p-2 border rounded" required min="0" step="0.01" />
+              <input type="date" id="expense-date" class="p-2 border rounded" required />
+              <button type="submit" class="bg-red-600 text-white py-2 px-4 rounded col-span-1 md:col-span-4">
+                تسجيل المصروف
+              </button>
+            </form>
+        
+            <div class="mb-4 text-left">
+              <button id="export-btn" class="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded">
+                تصدير إلى Excel
+              </button>
+            </div>
+        
+            <!-- جدول عرض المصروفات -->
+            <table class="w-full border text-center" id="expenses-table">
+              <thead class="bg-gray-200">
+                <tr>
+                  <th class="p-2 border">الرقم</th>
+                  <th class="p-2 border">النوع</th>
+                  <th class="p-2 border">المبلغ</th>
+                  <th class="p-2 border">التاريخ</th>
+                  <th class="p-2 border">الإجراءات</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- المصروفات ستضاف هنا ديناميكياً -->
+              </tbody>
+            </table>
+            <div class="text-center mt-6">
+              <a href="a7med.html" class="text-blue-600 underline">العودة للوحة التحكم</a>
+            </div>
+          </div>
+    </div>
+    <div id="suppliers" class="hidden bg-white p-4 rounded shadow"><h2 class="text-xl font-bold mb-2">
+        <div class="max-w-5xl mx-auto bg-white shadow p-6 rounded">
+            <h1 class="text-2xl font-bold mb-6 text-center">صفحة الموردين</h1>
+        
+            <!-- نموذج إضافة مورد جديد -->
+            <form id="suppliers-form" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+              <input type="text" id="supplier-name" placeholder="اسم المورد" class="p-2 border rounded" required />
+              <input type="text" id="supplier-phone" placeholder="رقم الهاتف" class="p-2 border rounded" required />
+              <input type="text" id="supplier-address" placeholder="العنوان" class="p-2 border rounded" required />
+              <button type="submit" class="bg-purple-600 text-white py-2 px-4 rounded col-span-1 md:col-span-4">
+                إضافة المورد
+              </button>
+            </form>
+        
+            <div class="mb-4 text-left">
+              <button id="export-btn" class="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded">
+                تصدير إلى Excel
+              </button>
+            </div>
+        
+            <!-- جدول عرض الموردين -->
+            <table class="w-full border text-center" id="suppliers-table">
+              <thead class="bg-gray-200">
+                <tr>
+                  <th class="p-2 border">الرقم</th>
+                  <th class="p-2 border">الاسم</th>
+                  <th class="p-2 border">رقم الهاتف</th>
+                  <th class="p-2 border">العنوان</th>
+                  <th class="p-2 border">الإجراءات</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- الموردين ستضاف هنا ديناميكياً -->
+              </tbody>
+            </table>
+        <div class="text-center mt-6">
+            <a href="a7med.html" class="text-blue-600 underline">العودة للوحة التحكم</a>
+          </div>
+        </div>
+        </div>
+    <div id="clients" class="hidden bg-white p-4 rounded shadow"><h2 class="text-xl font-bold mb-2">
+        <div class="max-w-5xl mx-auto bg-white shadow p-6 rounded">
+            <h1 class="text-2xl font-bold mb-6 text-center">صفحة العملاء</h1>
+        
+            <!-- نموذج إضافة عميل جديد -->
+            <form id="clients-form" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+              <input type="text" id="client-name" placeholder="اسم العميل" class="p-2 border rounded" required />
+              <input type="text" id="client-phone" placeholder="رقم الهاتف" class="p-2 border rounded" required />
+              <input type="email" id="client-email" placeholder="البريد الإلكتروني" class="p-2 border rounded" required />
+              <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded col-span-1 md:col-span-4">
+                إضافة العميل
+              </button>
+            </form>
+        
+            <div class="mb-4 text-left">
+              <button id="export-btn" class="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded">
+                تصدير إلى Excel
+              </button>
+            </div>
+        
+            <!-- جدول عرض العملاء -->
+            <table class="w-full border text-center" id="clients-table">
+              <thead class="bg-gray-200">
+                <tr>
+                  <th class="p-2 border">الرقم</th>
+                  <th class="p-2 border">الاسم</th>
+                  <th class="p-2 border">رقم الهاتف</th>
+                  <th class="p-2 border">البريد الإلكتروني</th>
+                  <th class="p-2 border">الإجراءات</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- العملاء ستضاف هنا ديناميكياً -->
+              </tbody>
+            </table>
+            
+            <div class="text-center mt-6">
+              <a href="a7med.html" class="text-blue-600 underline">العودة للوحة التحكم</a>
+            </div>
+          </div>
+    </div>
+    <div id="daily-entry" class="hidden bg-white p-4 rounded shadow"><h2 class="text-xl font-bold mb-2">
+        <div class="max-w-5xl mx-auto bg-white shadow p-6 rounded">
+            <h1 class="text-2xl font-bold mb-6 text-center">صفحة الإدخال اليومي</h1>
+        
+            <!-- نموذج الإدخال -->
+            <form id="daily-entry-form" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+              <input type="text" id="description" placeholder="الوصف" class="p-2 border rounded" required />
+              <input type="number" id="value" placeholder="القيمة" class="p-2 border rounded" required min="0" step="0.01" />
+              <input type="date" id="date" class="p-2 border rounded" required />
+              <button type="submit" class="bg-green-600 text-white py-2 px-4 rounded col-span-1 md:col-span-4">
+                تسجيل الإدخال
+              </button>
+            </form>
+        
+            <div class="mb-4 text-left">
+              <button id="export-btn" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded">
+                تصدير إلى Excel
+              </button>
+            </div>
+        
+            <!-- جدول الإدخالات اليومية -->
+            <table class="w-full border text-center" id="daily-entry-table">
+              <thead class="bg-gray-200">
+                <tr>
+                  <th class="p-2 border">الرقم</th>
+                  <th class="p-2 border">الوصف</th>
+                  <th class="p-2 border">القيمة</th>
+                  <th class="p-2 border">التاريخ</th>
+                  <th class="p-2 border">الإجراءات</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- الإدخالات ستضاف هنا ديناميكياً -->
+              </tbody>
+            </table>
+            <div class="text-center mt-6">
+              <a href="a7med.html" class="text-blue-600 underline">العودة للوحة التحكم</a>
+            </div>
+          </div>
+    </div>
+    <div id="other-accounts" class="hidden bg-white p-4 rounded shadow"><h2 class="text-xl font-bold mb-2">
+        <div class="max-w-5xl mx-auto bg-white shadow p-6 rounded">
+            <h1 class="text-2xl font-bold mb-6 text-center">صفحة الحسابات الأخرى</h1>
+        
+            <!-- نموذج تسجيل حساب -->
+            <form id="other-accounts-form" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+              <input type="text" id="account-name" placeholder="اسم الحساب" class="p-2 border rounded" required />
+              <input type="text" id="account-type" placeholder="النوع" class="p-2 border rounded" required />
+              <input type="number" id="account-balance" placeholder="الرصيد" class="p-2 border rounded" required />
+              <button type="submit" class="bg-indigo-600 text-white py-2 px-4 rounded col-span-1 md:col-span-4">
+                إضافة الحساب
+              </button>
+            </form>
+        
+            <div class="mb-4 text-left">
+              <button id="export-btn" class="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded">
+                تصدير إلى Excel
+              </button>
+            </div>
+        
+            <!-- جدول عرض الحسابات -->
+            <table class="w-full border text-center" id="other-accounts-table">
+              <thead class="bg-gray-200">
+                <tr>
+                  <th class="p-2 border">الرقم</th>
+                  <th class="p-2 border">اسم الحساب</th>
+                  <th class="p-2 border">النوع</th>
+                  <th class="p-2 border">الرصيد</th>
+                  <th class="p-2 border">الإجراءات</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- الحسابات ستضاف هنا ديناميكياً -->
+              </tbody>
+            </table>
+        
+            <div class="text-center mt-6">
+              <a href="a7med.html" class="text-blue-600 underline">العودة للوحة التحكم</a>
+            </div>
+          </div>
+    </div>
+    <div id="cash-movement" class="hidden bg-white p-4 rounded shadow"><h2 class="text-xl font-bold mb-2">
+        <div class="max-w-5xl mx-auto bg-white shadow p-6 rounded">
+            <h1 class="text-2xl font-bold mb-6 text-center">صفحة الدخل</h1>
+        
+            <!-- نموذج إضافة دخل جديد -->
+            <form id="income-form" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+              <input type="text" id="income-source" placeholder="مصدر الدخل" class="p-2 border rounded" required />
+              <input type="number" id="income-amount" placeholder="المبلغ" class="p-2 border rounded" required min="0" step="0.01" />
+              <input type="date" id="income-date" class="p-2 border rounded" required />
+              <button type="submit" class="bg-emerald-600 text-white py-2 px-4 rounded col-span-1 md:col-span-4">
+                إضافة الدخل
+              </button>
+            </form>
+        
+            <div class="mb-4 text-left">
+              <button id="export-btn" class="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded">
+                تصدير إلى Excel
+              </button>
+            </div>
+        
+            <!-- جدول عرض الدخل -->
+            <table class="w-full border text-center" id="income-table">
+              <thead class="bg-gray-200">
+                <tr>
+                  <th class="p-2 border">الرقم</th>
+                  <th class="p-2 border">المصدر</th>
+                  <th class="p-2 border">المبلغ</th>
+                  <th class="p-2 border">التاريخ</th>
+                  <th class="p-2 border">الإجراءات</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- الدخل ستضاف هنا ديناميكياً -->
+              </tbody>
+            </table>
+            <div class="text-center mt-6">
+              <a href="a7med.html" class="text-blue-600 underline">العودة للوحة التحكم</a>
+            </div>
+          </div>
+    </div>
+    <div id="item-movement" class="hidden bg-white p-4 rounded shadow"><h2 class="text-xl font-bold mb-2">
+        <div class="max-w-5xl mx-auto bg-white shadow p-6 rounded">
+            <h1 class="text-2xl font-bold mb-6 text-center">صفحة الكاش</h1>
+        
+            <!-- نموذج إدخال حركة الكاش -->
+            <form id="cash-form" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+              <input type="text" id="cash-description" placeholder="الوصف" class="p-2 border rounded" required />
+              <input type="number" id="cash-amount" placeholder="المبلغ" class="p-2 border rounded" required min="0" step="0.01" />
+              <select id="cash-type" class="p-2 border rounded" required>
+                <option value="" disabled selected>اختر النوع</option>
+                <option value="إيداع">إيداع</option>
+                <option value="سحب">سحب</option>
+              </select>
+              <button type="submit" class="bg-yellow-500 text-white py-2 px-4 rounded">
+                تسجيل الكاش
+              </button>
+            </form>
+        
+            <div class="mb-4 text-left">
+              <button id="export-btn" class="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded">
+                تصدير إلى Excel
+              </button>
+            </div>
+        
+            <!-- جدول حركات الكاش -->
+            <table class="w-full border text-center" id="cash-table">
+              <thead class="bg-gray-200">
+                <tr>
+                  <th class="p-2 border">الرقم</th>
+                  <th class="p-2 border">الوصف</th>
+                  <th class="p-2 border">المبلغ</th>
+                  <th class="p-2 border">النوع</th>
+                  <th class="p-2 border">التاريخ</th>
+                  <th class="p-2 border">الإجراءات</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- الحركات ستضاف هنا ديناميكياً -->
+              </tbody>
+            </table>
+            <div class="text-center mt-6">
+              <a href="a7med.html" class="text-blue-600 underline">العودة للوحة التحكم</a>
+            </div>
+          </div>
+    </div>
+    <div id="account-statement" class="hidden bg-white p-4 rounded shadow"><h2 class="text-xl font-bold mb-2">
+        <div class="max-w-5xl mx-auto bg-white shadow p-6 rounded">
+            <h1 class="text-2xl font-bold mb-6 text-center">صفحة حسابات العمال</h1>
+        
+            <!-- نموذج إضافة حساب عامل جديد -->
+            <form id="workers-accounts-form" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+              <input type="text" id="worker-name" placeholder="اسم العامل" class="p-2 border rounded" required />
+              <input type="text" id="worker-position" placeholder="الوظيفة" class="p-2 border rounded" required />
+              <input type="number" id="worker-salary" placeholder="الراتب" class="p-2 border rounded" required min="0" step="0.01" />
+              <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded col-span-1 md:col-span-4">
+                إضافة حساب العامل
+              </button>
+            </form>
+        
+            <div class="mb-4 text-left">
+              <button id="export-btn" class="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded">
+                تصدير إلى Excel
+              </button>
+            </div>
+        
+            <!-- جدول عرض حسابات العمال -->
+            <table class="w-full border text-center" id="workers-accounts-table">
+              <thead class="bg-gray-200">
+                <tr>
+                  <th class="p-2 border">الرقم</th>
+                  <th class="p-2 border">اسم العامل</th>
+                  <th class="p-2 border">الوظيفة</th>
+                  <th class="p-2 border">الراتب</th>
+                  <th class="p-2 border">الإجراءات</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- حسابات العمال ستضاف هنا ديناميكياً -->
+              </tbody>
+            </table>
+            <div class="text-center mt-6">
+              <a href="a7med.html" class="text-blue-600 underline">العودة للوحة التحكم</a>
+            </div>
+          </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script>
+    
+     //دالة حساب المخزون
+     // تحميل البيانات من localStorage
+    function loadStock() {
+      const data = localStorage.getItem("stockData");
+      return data ? JSON.parse(data) : [];
+    }
+
+    // حفظ البيانات في localStorage
+    function saveStock(data) {
+      localStorage.setItem("stockData", JSON.stringify(data));
+    }
+
+    // عرض البيانات في الجدول مع أزرار تعديل وحذف
+    function renderStock() {
+      const stock = loadStock();
+      const tbody = document.querySelector("#stock-table tbody");
+      tbody.innerHTML = "";
+      stock.forEach((item, index) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td class="p-2 border">${index + 1}</td>
+          <td class="p-2 border">${item.name}</td>
+          <td class="p-2 border">${item.quantity}</td>
+          <td class="p-2 border">${item.unit}</td>
+          <td class="p-2 border space-x-2">
+            <button onclick="editItem(${index})" class="bg-yellow-400 hover:bg-yellow-500 text-white py-1 px-3 rounded">تعديل</button>
+            <button onclick="deleteItem(${index})" class="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded">حذف</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // التعامل مع إرسال النموذج (إضافة أو تعديل)
+    let editIndexStock = -1; // -1 يعني إضافة جديد، غير ذلك تعديل
+
+    document.getElementById("stock-form").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const name = document.getElementById("item-name").value.trim();
+      const quantity = document.getElementById("item-quantity").value.trim();
+      const unit = document.getElementById("item-unit").value.trim();
+
+      if (!name || !quantity || !unit) {
+        alert("يرجى تعبئة جميع الحقول.");
+        return;
+      }
+
+      const stock = loadStock();
+
+      if (editIndex === -1) {
+        // إضافة جديد
+        stock.push({ name, quantity, unit });
+      } else {
+        // تعديل
+        stock[editIndex] = { name, quantity, unit };
+        editIndex = -1;
+        this.querySelector("button[type=submit]").textContent = "إضافة الصنف";
+      }
+
+      saveStock(stock);
+      renderStock();
+      this.reset();
+    });
+
+    // دالة حذف صنف
+    function deleteItem(index) {
+      if (confirm("هل أنت متأكد من حذف هذا الصنف؟")) {
+        const stock = loadStock();
+        stock.splice(index, 1);
+        saveStock(stock);
+        renderStock();
+        // إذا كنا في وضع تعديل على هذا العنصر، نعيد النموذج لوضع الإضافة
+        if (editIndex === index) {
+          editIndex = -1;
+          document.getElementById("stock-form").reset();
+          document.querySelector("#stock-form button[type=submit]").textContent = "إضافة الصنف";
+        }
+      }
+    }
+
+    // دالة تعديل صنف
+    function editItem(index) {
+      const stock = loadStock();
+      const item = stock[index];
+      document.getElementById("item-name").value = item.name;
+      document.getElementById("item-quantity").value = item.quantity;
+      document.getElementById("item-unit").value = item.unit;
+      editIndex = index;
+      document.querySelector("#stock-form button[type=submit]").textContent = "تحديث الصنف";
+    }
+
+    // دالة تصدير البيانات إلى Excel
+    function exportToExcel() {
+      const stock = loadStock();
+      if (stock.length === 0) {
+        alert("لا توجد بيانات للتصدير.");
+        return;
+      }
+
+      // تحويل البيانات إلى مصفوفة مصفوفات (rows)
+      const worksheetData = [
+        ["الرقم", "اسم الصنف", "الكمية", "الوحدة"],
+        ...stock.map((item, i) => [i + 1, item.name, item.quantity, item.unit]),
+      ];
+
+      // إنشاء ورقة عمل ودفتر عمل
+      const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "المخزون");
+
+      // تصدير الملف
+      XLSX.writeFile(workbook, "المخزون.xlsx");
+    }
+
+    // إضافة مستمع زر التصدير
+    document.getElementById("export-btn").addEventListener("click", exportToExcel);
+
+    // عرض المخزون عند تحميل الصفحة
+    window.addEventListener("DOMContentLoaded", () => {
+      renderStock();
+    });
+  
+   
+     //دالة حساب الإيرادات
+   // تحميل البيانات من localStorage
+   function loadRevenue() {
+      const data = localStorage.getItem("revenueData");
+      return data ? JSON.parse(data) : [];
+    }
+
+    // حفظ البيانات في localStorage
+    function saveRevenue(data) {
+      localStorage.setItem("revenueData", JSON.stringify(data));
+    }
+
+    // عرض البيانات في الجدول مع أزرار تعديل وحذف
+    function renderRevenue() {
+      const revenue = loadRevenue();
+      const tbody = document.querySelector("#revenue-table tbody");
+      tbody.innerHTML = "";
+      revenue.forEach((item, index) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td class="p-2 border">${index + 1}</td>
+          <td class="p-2 border">${item.source}</td>
+          <td class="p-2 border">${item.amount}</td>
+          <td class="p-2 border">${item.date}</td>
+          <td class="p-2 border space-x-2">
+            <button onclick="editRevenue(${index})" class="bg-yellow-400 hover:bg-yellow-500 text-white py-1 px-3 rounded">تعديل</button>
+            <button onclick="deleteRevenue(${index})" class="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded">حذف</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // التعامل مع إرسال النموذج (إضافة أو تعديل)
+    let editIndexWorkers = -1; // -1 يعني إضافة جديد، غير ذلك تعديل
+
+    document.getElementById("revenue-form").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const source = document.getElementById("revenue-source").value.trim();
+      const amount = document.getElementById("revenue-amount").value.trim();
+      const date = document.getElementById("revenue-date").value;
+
+      if (!source || !amount || !date) {
+        alert("يرجى تعبئة جميع الحقول.");
+        return;
+      }
+
+      const revenue = loadRevenue();
+
+      if (editIndex === -1) {
+        // إضافة جديد
+        revenue.push({ source, amount, date });
+      } else {
+        // تعديل
+        revenue[editIndex] = { source, amount, date };
+        editIndex = -1;
+        this.querySelector("button[type=submit]").textContent = "إضافة الإيراد";
+      }
+
+      saveRevenue(revenue);
+      renderRevenue();
+      this.reset();
+    });
+
+    // دالة حذف إيراد
+    function deleteRevenue(index) {
+      if (confirm("هل أنت متأكد من حذف هذا الإيراد؟")) {
+        const revenue = loadRevenue();
+        revenue.splice(index, 1);
+        saveRevenue(revenue);
+        renderRevenue();
+        // إذا كنا في وضع تعديل على هذا العنصر، نعيد النموذج لوضع الإضافة
+        if (editIndex === index) {
+          editIndex = -1;
+          document.getElementById("revenue-form").reset();
+          document.querySelector("#revenue-form button[type=submit]").textContent = "إضافة الإيراد";
+        }
+      }
+    }
+
+    // دالة تعديل إيراد
+    function editRevenue(index) {
+      const revenue = loadRevenue();
+      const item = revenue[index];
+      document.getElementById("revenue-source").value = item.source;
+      document.getElementById("revenue-amount").value = item.amount;
+      document.getElementById("revenue-date").value = item.date;
+      editIndex = index;
+      document.querySelector("#revenue-form button[type=submit]").textContent = "تحديث الإيراد";
+    }
+
+    // دالة تصدير البيانات إلى Excel
+    function exportToExcel() {
+      const revenue = loadRevenue();
+      if (revenue.length === 0) {
+        alert("لا توجد بيانات للتصدير.");
+        return;
+      }
+
+      // تحويل البيانات إلى مصفوفة مصفوفات (rows)
+      const worksheetData = [
+        ["الرقم", "المصدر", "المبلغ", "التاريخ"],
+        ...revenue.map((item, i) => [i + 1, item.source, item.amount, item.date]),
+      ];
+
+      // إنشاء ورقة عمل ودفتر عمل
+      const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "الإيرادات");
+
+      // تصدير الملف
+      XLSX.writeFile(workbook, "الإيرادات.xlsx");
+    }
+
+    // إضافة مستمع زر التصدير
+    document.getElementById("export-btn").addEventListener("click", exportToExcel);
+
+    // عرض الإيرادات عند تحميل الصفحة
+    window.addEventListener("DOMContentLoaded", () => {
+      renderRevenue();
+    });
+  
+
+
+
+     //دالة حساب المصروفات
+      // نطاق خاص للمصروفات لتجنب تعارض المتغيرات
+    (function() {
+      let editIndexExpenses = -1; // -1 يعني إضافة جديد، غير ذلك تعديل
+
+      // تحميل البيانات من localStorage
+      function loadExpenses() {
+        const data = localStorage.getItem("expensesData");
+        return data ? JSON.parse(data) : [];
+      }
+
+      // حفظ البيانات في localStorage
+      function saveExpenses(data) {
+        localStorage.setItem("expensesData", JSON.stringify(data));
+      }
+
+      // عرض البيانات في الجدول مع أزرار تعديل وحذف
+      function renderExpenses() {
+        const expenses = loadExpenses();
+        const tbody = document.querySelector("#expenses-table tbody");
+        tbody.innerHTML = "";
+        expenses.forEach((item, index) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td class="p-2 border">${index + 1}</td>
+            <td class="p-2 border">${item.type}</td>
+            <td class="p-2 border">${item.amount}</td>
+            <td class="p-2 border">${item.date}</td>
+            <td class="p-2 border space-x-2">
+              <button onclick="editExpense(${index})" class="bg-yellow-400 hover:bg-yellow-500 text-white py-1 px-3 rounded">تعديل</button>
+              <button onclick="deleteExpense(${index})" class="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded">حذف</button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      // التعامل مع إرسال النموذج (إضافة أو تعديل)
+      document.getElementById("expenses-form").addEventListener("submit", function(e) {
+        e.preventDefault();
+        const type = document.getElementById("expense-type").value.trim();
+        const amount = document.getElementById("expense-amount").value.trim();
+        const date = document.getElementById("expense-date").value;
+
+        if (!type || !amount || !date) {
+          alert("يرجى تعبئة جميع الحقول.");
+          return;
+        }
+
+        const expenses = loadExpenses();
+
+        if (editIndexExpenses === -1) {
+          // إضافة جديد
+          expenses.push({ type, amount, date });
+        } else {
+          // تعديل
+          expenses[editIndexExpenses] = { type, amount, date };
+          editIndexExpenses = -1;
+          this.querySelector("button[type=submit]").textContent = "تسجيل المصروف";
+        }
+
+        saveExpenses(expenses);
+        renderExpenses();
+        this.reset();
+      });
+
+      // دالة حذف مصروف
+      window.deleteExpense = function(index) {
+        if (confirm("هل أنت متأكد من حذف هذا المصروف؟")) {
+          const expenses = loadExpenses();
+          expenses.splice(index, 1);
+          saveExpenses(expenses);
+          renderExpenses();
+          // إذا كنا في وضع تعديل على هذا العنصر، نعيد النموذج لوضع الإضافة
+          if (editIndexExpenses === index) {
+            editIndexExpenses = -1;
+            document.getElementById("expenses-form").reset();
+            document.querySelector("#expenses-form button[type=submit]").textContent = "تسجيل المصروف";
+          }
+        }
+      };
+
+      // دالة تعديل مصروف
+      window.editExpense = function(index) {
+        const expenses = loadExpenses();
+        const expense = expenses[index];
+        document.getElementById("expense-type").value = expense.type;
+        document.getElementById("expense-amount").value = expense.amount;
+        document.getElementById("expense-date").value = expense.date;
+        editIndexExpenses = index;
+        document.querySelector("#expenses-form button[type=submit]").textContent = "تحديث المصروف";
+      };
+
+      // دالة تصدير البيانات إلى Excel
+      function exportToExcel() {
+        const expenses = loadExpenses();
+        if (expenses.length === 0) {
+          alert("لا توجد بيانات للتصدير.");
+          return;
+        }
+
+        // تحويل البيانات إلى مصفوفة مصفوفات (rows)
+        const worksheetData = [
+          ["الرقم", "النوع", "المبلغ", "التاريخ"],
+          ...expenses.map((item, i) => [i + 1, item.type, item.amount, item.date]),
+        ];
+
+        // إنشاء ورقة عمل ودفتر عمل
+        const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "المصروفات");
+
+        // تصدير الملف
+        XLSX.writeFile(workbook, "المصروفات.xlsx");
+      }
+
+      // إضافة مستمع زر التصدير
+      document.getElementById("export-btn").addEventListener("click", exportToExcel);
+
+      // عرض المصروفات عند تحميل الصفحة
+      window.addEventListener("DOMContentLoaded", () => {
+        renderExpenses();
+      });
+    })();
+  
+
+    //دالة حساب الموردين
+    (function() {
+      let editIndexSuppliers = -1;
+
+      function loadSuppliers() {
+        const data = localStorage.getItem("suppliersData");
+        return data ? JSON.parse(data) : [];
+      }
+
+      function saveSuppliers(data) {
+        localStorage.setItem("suppliersData", JSON.stringify(data));
+      }
+
+      function renderSuppliers() {
+        const suppliers = loadSuppliers();
+        const tbody = document.querySelector("#suppliers-table tbody");
+        tbody.innerHTML = "";
+        suppliers.forEach((supplier, index) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td class="p-2 border">${index + 1}</td>
+            <td class="p-2 border">${supplier.name}</td>
+            <td class="p-2 border">${supplier.phone}</td>
+            <td class="p-2 border">${supplier.address}</td>
+            <td class="p-2 border space-x-2">
+              <button onclick="editSupplier(${index})" class="bg-yellow-400 hover:bg-yellow-500 text-white py-1 px-3 rounded">تعديل</button>
+              <button onclick="deleteSupplier(${index})" class="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded">حذف</button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      document.getElementById("suppliers-form").addEventListener("submit", function(e) {
+        e.preventDefault();
+        const name = document.getElementById("supplier-name").value.trim();
+        const phone = document.getElementById("supplier-phone").value.trim();
+        const address = document.getElementById("supplier-address").value.trim();
+
+        if (!name || !phone || !address) {
+          alert("يرجى ملء جميع الحقول.");
+          return;
+        }
+
+        const suppliers = loadSuppliers();
+
+        if (editIndexSuppliers === -1) {
+          suppliers.push({ name, phone, address });
+        } else {
+          suppliers[editIndexSuppliers] = { name, phone, address };
+          editIndexSuppliers = -1;
+          this.querySelector("button[type=submit]").textContent = "إضافة المورد";
+        }
+
+        saveSuppliers(suppliers);
+        renderSuppliers();
+        this.reset();
+      });
+
+      window.deleteSupplier = function(index) {
+        if (confirm("هل أنت متأكد من حذف هذا المورد؟")) {
+          const suppliers = loadSuppliers();
+          suppliers.splice(index, 1);
+          saveSuppliers(suppliers);
+          renderSuppliers();
+          if (editIndexSuppliers === index) {
+            editIndexSuppliers = -1;
+            document.getElementById("suppliers-form").reset();
+            document.querySelector("#suppliers-form button[type=submit]").textContent = "إضافة المورد";
+          }
+        }
+      };
+
+      window.editSupplier = function(index) {
+        const suppliers = loadSuppliers();
+        const supplier = suppliers[index];
+        document.getElementById("supplier-name").value = supplier.name;
+        document.getElementById("supplier-phone").value = supplier.phone;
+        document.getElementById("supplier-address").value = supplier.address;
+        editIndexSuppliers = index;
+        document.querySelector("#suppliers-form button[type=submit]").textContent = "تحديث المورد";
+      };
+
+      function exportToExcel() {
+        const suppliers = loadSuppliers();
+        if (suppliers.length === 0) {
+          alert("لا توجد بيانات للتصدير.");
+          return;
+        }
+
+        const worksheetData = [
+          ["الرقم", "الاسم", "رقم الهاتف", "العنوان"],
+          ...suppliers.map((item, i) => [i + 1, item.name, item.phone, item.address]),
+        ];
+
+        const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "الموردين");
+
+        XLSX.writeFile(workbook, "الموردين.xlsx");
+      }
+
+      document.getElementById("export-btn").addEventListener("click", exportToExcel);
+
+      window.addEventListener("DOMContentLoaded", () => {
+        renderSuppliers();
+      });
+    })();
+  
+    
+
+
+     //دالة حساب العملاء
+     (function() {
+      let editIndexClients = -1;
+
+      function loadClients() {
+        const data = localStorage.getItem("clientsData");
+        return data ? JSON.parse(data) : [];
+      }
+
+      function saveClients(data) {
+        localStorage.setItem("clientsData", JSON.stringify(data));
+      }
+
+      function renderClients() {
+        const clients = loadClients();
+        const tbody = document.querySelector("#clients-table tbody");
+        tbody.innerHTML = "";
+        clients.forEach((client, index) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td class="p-2 border">${index + 1}</td>
+            <td class="p-2 border">${client.name}</td>
+            <td class="p-2 border">${client.phone}</td>
+            <td class="p-2 border">${client.email}</td>
+            <td class="p-2 border space-x-2">
+              <button onclick="editClient(${index})" class="bg-yellow-400 hover:bg-yellow-500 text-white py-1 px-3 rounded">تعديل</button>
+              <button onclick="deleteClient(${index})" class="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded">حذف</button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      document.getElementById("clients-form").addEventListener("submit", function(e) {
+        e.preventDefault();
+        const name = document.getElementById("client-name").value.trim();
+        const phone = document.getElementById("client-phone").value.trim();
+        const email = document.getElementById("client-email").value.trim();
+
+        if (!name || !phone || !email) {
+          alert("يرجى ملء جميع الحقول.");
+          return;
+        }
+
+        const clients = loadClients();
+
+        if (editIndexClients === -1) {
+          clients.push({ name, phone, email });
+        } else {
+          clients[editIndexClients] = { name, phone, email };
+          editIndexClients = -1;
+          this.querySelector("button[type=submit]").textContent = "إضافة العميل";
+        }
+
+        saveClients(clients);
+        renderClients();
+        this.reset();
+      });
+
+      window.deleteClient = function(index) {
+        if (confirm("هل أنت متأكد من حذف هذا العميل؟")) {
+          const clients = loadClients();
+          clients.splice(index, 1);
+          saveClients(clients);
+          renderClients();
+          if (editIndexClients === index) {
+            editIndexClients = -1;
+            document.getElementById("clients-form").reset();
+            document.querySelector("#clients-form button[type=submit]").textContent = "إضافة العميل";
+          }
+        }
+      };
+
+      window.editClient = function(index) {
+        const clients = loadClients();
+        const client = clients[index];
+        document.getElementById("client-name").value = client.name;
+        document.getElementById("client-phone").value = client.phone;
+        document.getElementById("client-email").value = client.email;
+        editIndexClients = index;
+        document.querySelector("#clients-form button[type=submit]").textContent = "تحديث العميل";
+      };
+
+      function exportToExcel() {
+        const clients = loadClients();
+        if (clients.length === 0) {
+          alert("لا توجد بيانات للتصدير.");
+          return;
+        }
+
+        const worksheetData = [
+          ["الرقم", "الاسم", "رقم الهاتف", "البريد الإلكتروني"],
+          ...clients.map((item, i) => [i + 1, item.name, item.phone, item.email]),
+        ];
+
+        const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "العملاء");
+
+        XLSX.writeFile(workbook, "العملاء.xlsx");
+      }
+
+      document.getElementById("export-btn").addEventListener("click", exportToExcel);
+
+      window.addEventListener("DOMContentLoaded", () => {
+        renderClients();
+      });
+    })();
+
+
+
+    // دالة حساب الدخل اليومي
+    // تحميل البيانات من localStorage
+    (function() {
+      let editIndexOtherAccounts = -1;
+
+      function loadOtherAccounts() {
+        const data = localStorage.getItem("otherAccountsData");
+        return data ? JSON.parse(data) : [];
+      }
+
+      function saveOtherAccounts(data) {
+        localStorage.setItem("otherAccountsData", JSON.stringify(data));
+      }
+
+      function renderOtherAccounts() {
+        const accounts = loadOtherAccounts();
+        const tbody = document.querySelector("#other-accounts-table tbody");
+        tbody.innerHTML = "";
+        accounts.forEach((account, index) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td class="p-2 border">${index + 1}</td>
+            <td class="p-2 border">${account.name}</td>
+            <td class="p-2 border">${account.type}</td>
+            <td class="p-2 border">${account.balance}</td>
+            <td class="p-2 border space-x-2">
+              <button onclick="editOtherAccount(${index})" class="bg-yellow-400 hover:bg-yellow-500 text-white py-1 px-3 rounded">تعديل</button>
+              <button onclick="deleteOtherAccount(${index})" class="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded">حذف</button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      document.getElementById("other-accounts-form").addEventListener("submit", function(e) {
+        e.preventDefault();
+        const name = document.getElementById("account-name").value.trim();
+        const type = document.getElementById("account-type").value.trim();
+        const balance = document.getElementById("account-balance").value.trim();
+
+        if (!name || !type || !balance) {
+          alert("يرجى ملء جميع الحقول.");
+          return;
+        }
+
+        const accounts = loadOtherAccounts();
+
+        if (editIndexOtherAccounts === -1) {
+          accounts.push({ name, type, balance });
+        } else {
+          accounts[editIndexOtherAccounts] = { name, type, balance };
+          editIndexOtherAccounts = -1;
+          this.querySelector("button[type=submit]").textContent = "إضافة الحساب";
+        }
+
+        saveOtherAccounts(accounts);
+        renderOtherAccounts();
+        this.reset();
+      });
+
+      window.deleteOtherAccount = function(index) {
+        if (confirm("هل أنت متأكد من حذف هذا الحساب؟")) {
+          const accounts = loadOtherAccounts();
+          accounts.splice(index, 1);
+          saveOtherAccounts(accounts);
+          renderOtherAccounts();
+          if (editIndexOtherAccounts === index) {
+            editIndexOtherAccounts = -1;
+            document.getElementById("other-accounts-form").reset();
+            document.querySelector("#other-accounts-form button[type=submit]").textContent = "إضافة الحساب";
+          }
+        }
+      };
+
+      window.editOtherAccount = function(index) {
+        const accounts = loadOtherAccounts();
+        const account = accounts[index];
+        document.getElementById("account-name").value = account.name;
+        document.getElementById("account-type").value = account.type;
+        document.getElementById("account-balance").value = account.balance;
+        editIndexOtherAccounts = index;
+        document.querySelector("#other-accounts-form button[type=submit]").textContent = "تحديث الحساب";
+      };
+
+      function exportToExcel() {
+        const accounts = loadOtherAccounts();
+        if (accounts.length === 0) {
+          alert("لا توجد بيانات للتصدير.");
+          return;
+        }
+
+        const worksheetData = [
+          ["الرقم", "اسم الحساب", "النوع", "الرصيد"],
+          ...accounts.map((item, i) => [i + 1, item.name, item.type, item.balance]),
+        ];
+
+        const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "الحسابات الأخرى");
+
+        XLSX.writeFile(workbook, "الحسابات_الأخرى.xlsx");
+      }
+
+      document.getElementById("export-btn").addEventListener("click", exportToExcel);
+
+      window.addEventListener("DOMContentLoaded", () => {
+        renderOtherAccounts();
+      });
+    })();
+  
+  
+    
+
+
+
+    //دالة حساب الحسابات الاخري
+    // تحميل البيانات من localStorage
+    (function() {
+      let editIndexOtherAccounts = -1;
+
+      function loadOtherAccounts() {
+        const data = localStorage.getItem("otherAccountsData");
+        return data ? JSON.parse(data) : [];
+      }
+
+      function saveOtherAccounts(data) {
+        localStorage.setItem("otherAccountsData", JSON.stringify(data));
+      }
+
+      function renderOtherAccounts() {
+        const accounts = loadOtherAccounts();
+        const tbody = document.querySelector("#other-accounts-table tbody");
+        tbody.innerHTML = "";
+        accounts.forEach((account, index) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td class="p-2 border">${index + 1}</td>
+            <td class="p-2 border">${account.name}</td>
+            <td class="p-2 border">${account.type}</td>
+            <td class="p-2 border">${account.balance}</td>
+            <td class="p-2 border space-x-2">
+              <button onclick="editOtherAccount(${index})" class="bg-yellow-400 hover:bg-yellow-500 text-white py-1 px-3 rounded">تعديل</button>
+              <button onclick="deleteOtherAccount(${index})" class="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded">حذف</button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      document.getElementById("other-accounts-form").addEventListener("submit", function(e) {
+        e.preventDefault();
+        const name = document.getElementById("account-name").value.trim();
+        const type = document.getElementById("account-type").value.trim();
+        const balance = document.getElementById("account-balance").value.trim();
+
+        if (!name || !type || !balance) {
+          alert("يرجى ملء جميع الحقول.");
+          return;
+        }
+
+        const accounts = loadOtherAccounts();
+
+        if (editIndexOtherAccounts === -1) {
+          accounts.push({ name, type, balance });
+        } else {
+          accounts[editIndexOtherAccounts] = { name, type, balance };
+          editIndexOtherAccounts = -1;
+          this.querySelector("button[type=submit]").textContent = "إضافة الحساب";
+        }
+
+        saveOtherAccounts(accounts);
+        renderOtherAccounts();
+        this.reset();
+      });
+
+      window.deleteOtherAccount = function(index) {
+        if (confirm("هل أنت متأكد من حذف هذا الحساب؟")) {
+          const accounts = loadOtherAccounts();
+          accounts.splice(index, 1);
+          saveOtherAccounts(accounts);
+          renderOtherAccounts();
+          if (editIndexOtherAccounts === index) {
+            editIndexOtherAccounts = -1;
+            document.getElementById("other-accounts-form").reset();
+            document.querySelector("#other-accounts-form button[type=submit]").textContent = "إضافة الحساب";
+          }
+        }
+      };
+
+      window.editOtherAccount = function(index) {
+        const accounts = loadOtherAccounts();
+        const account = accounts[index];
+        document.getElementById("account-name").value = account.name;
+        document.getElementById("account-type").value = account.type;
+        document.getElementById("account-balance").value = account.balance;
+        editIndexOtherAccounts = index;
+        document.querySelector("#other-accounts-form button[type=submit]").textContent = "تحديث الحساب";
+      };
+
+      function exportToExcel() {
+        const accounts = loadOtherAccounts();
+        if (accounts.length === 0) {
+          alert("لا توجد بيانات للتصدير.");
+          return;
+        }
+
+        const worksheetData = [
+          ["الرقم", "اسم الحساب", "النوع", "الرصيد"],
+          ...accounts.map((item, i) => [i + 1, item.name, item.type, item.balance]),
+        ];
+
+        const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "الحسابات الأخرى");
+
+        XLSX.writeFile(workbook, "الحسابات_الأخرى.xlsx");
+      }
+
+      document.getElementById("export-btn").addEventListener("click", exportToExcel);
+
+      window.addEventListener("DOMContentLoaded", () => {
+        renderOtherAccounts();
+      });
+    })();
+
+
+
+
+
+     //دالة حساب الدخل
+    // تحميل البيانات من localStorage
+    (function() {
+      let editIndexIncome = -1;
+
+      function loadIncome() {
+        const data = localStorage.getItem("incomeData");
+        return data ? JSON.parse(data) : [];
+      }
+
+      function saveIncome(data) {
+        localStorage.setItem("incomeData", JSON.stringify(data));
+      }
+
+      function renderIncome() {
+        const income = loadIncome();
+        const tbody = document.querySelector("#income-table tbody");
+        tbody.innerHTML = "";
+        income.forEach((item, index) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td class="p-2 border">${index + 1}</td>
+            <td class="p-2 border">${item.source}</td>
+            <td class="p-2 border">${item.amount}</td>
+            <td class="p-2 border">${item.date}</td>
+            <td class="p-2 border space-x-2">
+              <button onclick="editIncome(${index})" class="bg-yellow-400 hover:bg-yellow-500 text-white py-1 px-3 rounded">تعديل</button>
+              <button onclick="deleteIncome(${index})" class="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded">حذف</button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      document.getElementById("income-form").addEventListener("submit", function(e) {
+        e.preventDefault();
+        const source = document.getElementById("income-source").value.trim();
+        const amount = document.getElementById("income-amount").value.trim();
+        const date = document.getElementById("income-date").value;
+
+        if (!source || !amount || !date) {
+          alert("يرجى ملء جميع الحقول.");
+          return;
+        }
+
+        const income = loadIncome();
+
+        if (editIndexIncome === -1) {
+          income.push({ source, amount, date });
+        } else {
+          income[editIndexIncome] = { source, amount, date };
+          editIndexIncome = -1;
+          this.querySelector("button[type=submit]").textContent = "إضافة الدخل";
+        }
+
+        saveIncome(income);
+        renderIncome();
+        this.reset();
+      });
+
+      window.deleteIncome = function(index) {
+        if (confirm("هل أنت متأكد من حذف هذا الدخل؟")) {
+          const income = loadIncome();
+          income.splice(index, 1);
+          saveIncome(income);
+          renderIncome();
+          if (editIndexIncome === index) {
+            editIndexIncome = -1;
+            document.getElementById("income-form").reset();
+            document.querySelector("#income-form button[type=submit]").textContent = "إضافة الدخل";
+          }
+        }
+      };
+
+      window.editIncome = function(index) {
+        const income = loadIncome();
+        const entry = income[index];
+        document.getElementById("income-source").value = entry.source;
+        document.getElementById("income-amount").value = entry.amount;
+        document.getElementById("income-date").value = entry.date;
+        editIndexIncome = index;
+        document.querySelector("#income-form button[type=submit]").textContent = "تحديث الدخل";
+      };
+
+      function exportToExcel() {
+        const income = loadIncome();
+        if (income.length === 0) {
+          alert("لا توجد بيانات للتصدير.");
+          return;
+        }
+
+        const worksheetData = [
+          ["الرقم", "المصدر", "المبلغ", "التاريخ"],
+          ...income.map((item, i) => [i + 1, item.source, item.amount, item.date]),
+        ];
+
+        const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "الدخل");
+
+        XLSX.writeFile(workbook, "الدخل.xlsx");
+      }
+
+      document.getElementById("export-btn").addEventListener("click", exportToExcel);
+
+      window.addEventListener("DOMContentLoaded", () => {
+        renderIncome();
+      });
+    })();
+  
+  
+
+    
+   
+
+    
+
+  
+     //دالة حساب الكاش
+    // تحميل البيانات من localStorage
+    (function() {
+      let editIndexCash = -1;
+
+      function loadCashData() {
+        const data = localStorage.getItem("cashData");
+        return data ? JSON.parse(data) : [];
+      }
+
+      function saveCashData(data) {
+        localStorage.setItem("cashData", JSON.stringify(data));
+      }
+
+      function renderCashTable() {
+        const cashData = loadCashData();
+        const tbody = document.querySelector("#cash-table tbody");
+        tbody.innerHTML = "";
+        cashData.forEach((item, index) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td class="p-2 border">${index + 1}</td>
+            <td class="p-2 border">${item.description}</td>
+            <td class="p-2 border">${item.amount}</td>
+            <td class="p-2 border">${item.type}</td>
+            <td class="p-2 border">${item.date}</td>
+            <td class="p-2 border space-x-2">
+              <button onclick="editCash(${index})" class="bg-yellow-400 hover:bg-yellow-500 text-white py-1 px-3 rounded">تعديل</button>
+              <button onclick="deleteCash(${index})" class="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded">حذف</button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      document.getElementById("cash-form").addEventListener("submit", function(e) {
+        e.preventDefault();
+        const description = document.getElementById("cash-description").value.trim();
+        const amount = document.getElementById("cash-amount").value.trim();
+        const type = document.getElementById("cash-type").value;
+
+        if (!description || !amount || !type) {
+          alert("يرجى ملء جميع الحقول.");
+          return;
+        }
+
+        const cashData = loadCashData();
+        const today = new Date().toISOString().split("T")[0];
+
+        if (editIndexCash === -1) {
+          cashData.push({ description, amount, type, date: today });
+        } else {
+          cashData[editIndexCash] = { description, amount, type, date: today };
+          editIndexCash = -1;
+          this.querySelector("button[type=submit]").textContent = "تسجيل الكاش";
+        }
+
+        saveCashData(cashData);
+        renderCashTable();
+        this.reset();
+      });
+
+      window.deleteCash = function(index) {
+        if (confirm("هل أنت متأكد من حذف هذه الحركة؟")) {
+          const cashData = loadCashData();
+          cashData.splice(index, 1);
+          saveCashData(cashData);
+          renderCashTable();
+          if (editIndexCash === index) {
+            editIndexCash = -1;
+            document.getElementById("cash-form").reset();
+            document.querySelector("#cash-form button[type=submit]").textContent = "تسجيل الكاش";
+          }
+        }
+      };
+
+      window.editCash = function(index) {
+        const cashData = loadCashData();
+        const entry = cashData[index];
+        document.getElementById("cash-description").value = entry.description;
+        document.getElementById("cash-amount").value = entry.amount;
+        document.getElementById("cash-type").value = entry.type;
+        editIndexCash = index;
+        document.querySelector("#cash-form button[type=submit]").textContent = "تحديث الكاش";
+      };
+
+      function exportToExcel() {
+        const cashData = loadCashData();
+        if (cashData.length === 0) {
+          alert("لا توجد بيانات للتصدير.");
+          return;
+        }
+
+        const worksheetData = [
+          ["الرقم", "الوصف", "المبلغ", "النوع", "التاريخ"],
+          ...cashData.map((item, i) => [i + 1, item.description, item.amount, item.type, item.date]),
+        ];
+
+        const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "الكاش");
+
+        XLSX.writeFile(workbook, "الكاش.xlsx");
+      }
+
+      document.getElementById("export-btn").addEventListener("click", exportToExcel);
+
+      window.addEventListener("DOMContentLoaded", () => {
+        renderCashTable();
+      });
+    })();
+  
+
+
+
+    
+   //دالة حساب العامل
+   // تحميل البيانات من localStorage
+   function loadWorkersAccounts() {
+      const data = localStorage.getItem("workersAccountsData");
+      return data ? JSON.parse(data) : [];
+    }
+
+    // حفظ البيانات في localStorage
+    function saveWorkersAccounts(data) {
+      localStorage.setItem("workersAccountsData", JSON.stringify(data));
+    }
+
+    // عرض البيانات في الجدول مع أزرار تعديل وحذف
+    function renderWorkersAccounts() {
+      const accounts = loadWorkersAccounts();
+      const tbody = document.querySelector("#workers-accounts-table tbody");
+      tbody.innerHTML = "";
+      accounts.forEach((account, index) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td class="p-2 border">${index + 1}</td>
+          <td class="p-2 border">${account.name}</td>
+          <td class="p-2 border">${account.position}</td>
+          <td class="p-2 border">${account.salary}</td>
+          <td class="p-2 border space-x-2">
+            <button onclick="editWorker(${index})" class="bg-yellow-400 hover:bg-yellow-500 text-white py-1 px-3 rounded">تعديل</button>
+            <button onclick="deleteWorker(${index})" class="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded">حذف</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // التعامل مع إرسال النموذج (إضافة أو تعديل)
+    let editIndex = -1; // -1 يعني إضافة جديد، غير ذلك تعديل
+
+    document.getElementById("workers-accounts-form").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const name = document.getElementById("worker-name").value.trim();
+      const position = document.getElementById("worker-position").value.trim();
+      const salary = document.getElementById("worker-salary").value.trim();
+
+      if (!name || !position || !salary) {
+        alert("يرجى ملء جميع الحقول.");
+        return;
+      }
+
+      const accounts = loadWorkersAccounts();
+
+      if (editIndex === -1) {
+        // إضافة جديد
+        accounts.push({ name, position, salary });
+      } else {
+        // تعديل
+        accounts[editIndex] = { name, position, salary };
+        editIndex = -1;
+        this.querySelector("button[type=submit]").textContent = "إضافة حساب العامل";
+      }
+
+      saveWorkersAccounts(accounts);
+      renderWorkersAccounts();
+      this.reset();
+    });
+
+    // دالة حذف حساب عامل
+    function deleteWorker(index) {
+      if (confirm("هل أنت متأكد من حذف هذا الحساب؟")) {
+        const accounts = loadWorkersAccounts();
+        accounts.splice(index, 1);
+        saveWorkersAccounts(accounts);
+        renderWorkersAccounts();
+        // إذا كنا في وضع تعديل على هذا العنصر، نعيد النموذج لوضع الإضافة
+        if (editIndex === index) {
+          editIndex = -1;
+          document.getElementById("workers-accounts-form").reset();
+          document.querySelector("#workers-accounts-form button[type=submit]").textContent = "إضافة حساب العامل";
+        }
+      }
+    }
+
+    // دالة تعديل حساب عامل
+    function editWorker(index) {
+      const accounts = loadWorkersAccounts();
+      const account = accounts[index];
+      document.getElementById("worker-name").value = account.name;
+      document.getElementById("worker-position").value = account.position;
+      document.getElementById("worker-salary").value = account.salary;
+      editIndex = index;
+      document.querySelector("#workers-accounts-form button[type=submit]").textContent = "تحديث الحساب";
+    }
+
+    // دالة تصدير البيانات إلى Excel
+    function exportToExcel() {
+      const accounts = loadWorkersAccounts();
+      if (accounts.length === 0) {
+        alert("لا توجد بيانات للتصدير.");
+        return;
+      }
+
+      // تحويل البيانات إلى مصفوفة مصفوفات (rows)
+      const worksheetData = [
+        ["الرقم", "اسم العامل", "الوظيفة", "الراتب"],
+        ...accounts.map((acc, i) => [i + 1, acc.name, acc.position, acc.salary]),
+      ];
+
+      // إنشاء ورقة عمل ودفتر عمل
+      const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "حسابات العمال");
+
+      // تصدير الملف
+      XLSX.writeFile(workbook, "حسابات_العمال.xlsx");
+    }
+
+    // إضافة مستمع زر التصدير
+    document.getElementById("export-btn").addEventListener("click", exportToExcel);
+
+    // عرض حسابات العمال عند تحميل الصفحة
+    window.addEventListener("DOMContentLoaded", () => {
+      renderWorkersAccounts();
+    });
+
+
+
+
+
+    function updateDateTime() {
+    const dateTimeEl = document.getElementById("dateTime");
+    if (!dateTimeEl) return;
+    const now = new Date();
+    const day = String(now.getDate()).padStart(2, "0");
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const year = now.getFullYear();
+    const hours = String(now.getHours()).padStart(2, "0");
+    const minutes = String(now.getMinutes()).padStart(2, "0");
+    const formatted = `${day}/${month}/${year} ${hours}:${minutes}`;
+    dateTimeEl.textContent = formatted;
+  }
+  setInterval(updateDateTime, 60000);
+  updateDateTime();
+  
+  
+    
+
+   // دالة لإظهار القسم المطلوب وإخفاء الباقي
+  function showSection(sectionId) {
+    const sections = document.querySelectorAll("#sections > div");
+    sections.forEach(section => {
+      if (section.id === sectionId) {
+        section.classList.remove("hidden");
+      } else {
+        section.classList.add("hidden");
+      }
+    });
+  }
+
+  // عند تحميل الصفحة، إظهار الصفحة الرئيسية أو صفحة محددة
+  document.addEventListener("DOMContentLoaded", () => {
+    // يمكنك تغيير 'stock' إلى أي صفحة تريد عرضها افتراضياً
+    showSection("dashboard");
+  });
+  </script>
+</body>
+</html>
