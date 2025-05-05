@@ -1084,115 +1084,113 @@
 
 
     // دالة حساب الدخل اليومي
-    // تحميل البيانات من localStorage
     (function() {
-      let editIndexOtherAccounts = -1;
+      let editIndexDaily = -1;
 
-      function loadOtherAccounts() {
-        const data = localStorage.getItem("otherAccountsData");
+      function loadDailyEntries() {
+        const data = localStorage.getItem("dailyEntries");
         return data ? JSON.parse(data) : [];
       }
 
-      function saveOtherAccounts(data) {
-        localStorage.setItem("otherAccountsData", JSON.stringify(data));
+      function saveDailyEntries(data) {
+        localStorage.setItem("dailyEntries", JSON.stringify(data));
       }
 
-      function renderOtherAccounts() {
-        const accounts = loadOtherAccounts();
-        const tbody = document.querySelector("#other-accounts-table tbody");
+      function renderDailyEntries() {
+        const entries = loadDailyEntries();
+        const tbody = document.querySelector("#daily-entry-table tbody");
         tbody.innerHTML = "";
-        accounts.forEach((account, index) => {
+        entries.forEach((item, index) => {
           const tr = document.createElement("tr");
           tr.innerHTML = `
             <td class="p-2 border">${index + 1}</td>
-            <td class="p-2 border">${account.name}</td>
-            <td class="p-2 border">${account.type}</td>
-            <td class="p-2 border">${account.balance}</td>
+            <td class="p-2 border">${item.description}</td>
+            <td class="p-2 border">${item.value}</td>
+            <td class="p-2 border">${item.date}</td>
             <td class="p-2 border space-x-2">
-              <button onclick="editOtherAccount(${index})" class="bg-yellow-400 hover:bg-yellow-500 text-white py-1 px-3 rounded">تعديل</button>
-              <button onclick="deleteOtherAccount(${index})" class="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded">حذف</button>
+              <button onclick="editDailyEntry(${index})" class="bg-yellow-400 hover:bg-yellow-500 text-white py-1 px-3 rounded">تعديل</button>
+              <button onclick="deleteDailyEntry(${index})" class="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded">حذف</button>
             </td>
           `;
           tbody.appendChild(tr);
         });
       }
 
-      document.getElementById("other-accounts-form").addEventListener("submit", function(e) {
+      document.getElementById("daily-entry-form").addEventListener("submit", function(e) {
         e.preventDefault();
-        const name = document.getElementById("account-name").value.trim();
-        const type = document.getElementById("account-type").value.trim();
-        const balance = document.getElementById("account-balance").value.trim();
+        const description = document.getElementById("description").value.trim();
+        const value = document.getElementById("value").value.trim();
+        const date = document.getElementById("date").value;
 
-        if (!name || !type || !balance) {
+        if (!description || !value || !date) {
           alert("يرجى ملء جميع الحقول.");
           return;
         }
 
-        const accounts = loadOtherAccounts();
+        const entries = loadDailyEntries();
 
-        if (editIndexOtherAccounts === -1) {
-          accounts.push({ name, type, balance });
+        if (editIndexDaily === -1) {
+          entries.push({ description, value, date });
         } else {
-          accounts[editIndexOtherAccounts] = { name, type, balance };
-          editIndexOtherAccounts = -1;
-          this.querySelector("button[type=submit]").textContent = "إضافة الحساب";
+          entries[editIndexDaily] = { description, value, date };
+          editIndexDaily = -1;
+          this.querySelector("button[type=submit]").textContent = "تسجيل الإدخال";
         }
 
-        saveOtherAccounts(accounts);
-        renderOtherAccounts();
+        saveDailyEntries(entries);
+        renderDailyEntries();
         this.reset();
       });
 
-      window.deleteOtherAccount = function(index) {
-        if (confirm("هل أنت متأكد من حذف هذا الحساب؟")) {
-          const accounts = loadOtherAccounts();
-          accounts.splice(index, 1);
-          saveOtherAccounts(accounts);
-          renderOtherAccounts();
-          if (editIndexOtherAccounts === index) {
-            editIndexOtherAccounts = -1;
-            document.getElementById("other-accounts-form").reset();
-            document.querySelector("#other-accounts-form button[type=submit]").textContent = "إضافة الحساب";
+      window.deleteDailyEntry = function(index) {
+        if (confirm("هل أنت متأكد من حذف هذا الإدخال؟")) {
+          const entries = loadDailyEntries();
+          entries.splice(index, 1);
+          saveDailyEntries(entries);
+          renderDailyEntries();
+          if (editIndexDaily === index) {
+            editIndexDaily = -1;
+            document.getElementById("daily-entry-form").reset();
+            document.querySelector("#daily-entry-form button[type=submit]").textContent = "تسجيل الإدخال";
           }
         }
       };
 
-      window.editOtherAccount = function(index) {
-        const accounts = loadOtherAccounts();
-        const account = accounts[index];
-        document.getElementById("account-name").value = account.name;
-        document.getElementById("account-type").value = account.type;
-        document.getElementById("account-balance").value = account.balance;
-        editIndexOtherAccounts = index;
-        document.querySelector("#other-accounts-form button[type=submit]").textContent = "تحديث الحساب";
+      window.editDailyEntry = function(index) {
+        const entries = loadDailyEntries();
+        const entry = entries[index];
+        document.getElementById("description").value = entry.description;
+        document.getElementById("value").value = entry.value;
+        document.getElementById("date").value = entry.date;
+        editIndexDaily = index;
+        document.querySelector("#daily-entry-form button[type=submit]").textContent = "تحديث الإدخال";
       };
 
       function exportToExcel() {
-        const accounts = loadOtherAccounts();
-        if (accounts.length === 0) {
+        const entries = loadDailyEntries();
+        if (entries.length === 0) {
           alert("لا توجد بيانات للتصدير.");
           return;
         }
 
         const worksheetData = [
-          ["الرقم", "اسم الحساب", "النوع", "الرصيد"],
-          ...accounts.map((item, i) => [i + 1, item.name, item.type, item.balance]),
+          ["الرقم", "الوصف", "القيمة", "التاريخ"],
+          ...entries.map((item, i) => [i + 1, item.description, item.value, item.date]),
         ];
 
         const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
         const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "الحسابات الأخرى");
+        XLSX.utils.book_append_sheet(workbook, worksheet, "الإدخالات اليومية");
 
-        XLSX.writeFile(workbook, "الحسابات_الأخرى.xlsx");
+        XLSX.writeFile(workbook, "الإدخالات_اليومية.xlsx");
       }
 
       document.getElementById("export-btn").addEventListener("click", exportToExcel);
 
       window.addEventListener("DOMContentLoaded", () => {
-        renderOtherAccounts();
+        renderDailyEntries();
       });
     })();
-  
   
     
 
@@ -1689,6 +1687,9 @@
   
   
     
+
+
+  
 
    // دالة لإظهار القسم المطلوب وإخفاء الباقي
   function showSection(sectionId) {
